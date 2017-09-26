@@ -2,7 +2,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-
+import * as process from 'child_process'
+import * as path from 'path'
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -14,14 +15,74 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
+    let commandNumber = 2;
+    
+    for (let i = 1; i <= commandNumber; i++) {
+        let cmdId = `externalCommand${i}`;
+        let disposable = vscode.commands.registerCommand(`extension.${cmdId}`, () => {
+            // The code you place here will be executed every time your command is executed
+            executeCommand(vscode.workspace.getConfiguration(cmdId));
+        });
 
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
+        context.subscriptions.push(disposable);
+    }
+}
+
+function executeCommand(config:vscode.WorkspaceConfiguration) {
+    let command = config.get<string>('command');
+    let args = config.get<string[]>('args', []);
+    let cwd = config.get<string>('cwd');
+
+    let macro = {
+        ItemPath: getActiveFilePath(),
+        ItemDir: getActiveFileDirectory(),
+        ItemFileName: getActiveFileName(),
+        ItemExt: getActiveFileExtension(),
+        ProjectDir: getWorkspaceRootPath()
+    };
+
+    let replacedArgs = args.map((arg) => {
+        return replaceWithMacro(arg, macro);
     });
 
-    context.subscriptions.push(disposable);
+    let replacedCwd = replaceWithMacro(cwd, macro) || macro.ProjectDir || macro.ItemDir;
+    process.spawn(command, replacedArgs, {
+        cwd: replacedCwd
+    });
+}
+
+function getActiveFilePath(): string {
+    return vscode.window.activeTextEditor.document.fileName;
+}
+
+function getActiveFileDirectory(): string {
+    return path.dirname(vscode.window.activeTextEditor.document.fileName);
+}
+
+function getActiveFileName(): string {
+    return path.basename(vscode.window.activeTextEditor.document.fileName, getActiveFileExtension());
+}
+
+function getActiveFileExtension(): string {
+    return path.extname(vscode.window.activeTextEditor.document.fileName);
+}
+
+function getWorkspaceRootPath(): string {
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+        return vscode.workspace.workspaceFolders[0].uri.fsPath;
+    }
+    return undefined;
+}
+
+function replaceWithMacro(input: string, macro: any) {
+    if(!input){
+        return undefined;
+    }
+    let replaced = input;
+    for (let key in macro) {
+        replaced = replaced.replace(`$(${key})`, macro[key]);
+    }
+    return replaced;
 }
 
 // this method is called when your extension is deactivated

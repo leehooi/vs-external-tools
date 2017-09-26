@@ -11,14 +11,55 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        }]
+        "commands": [
+            {
+                "command": "extension.externalCommand1",
+                "title": "External Command 1"
+            },
+            {
+                "command": "extension.externalCommand2",
+                "title": "External Command 2"
+            }
+        ],
+        "configuration": {
+            "title": "vs-external-tools",
+            "properties": {
+                "externalCommand1.command": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Command"
+                },
+                "externalCommand1.args": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Arguments"
+                },
+                "externalCommand1.cwd": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Initial directory"
+                },
+                "externalCommand2.command": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Command"
+                },
+                "externalCommand2.args": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Arguments"
+                },
+                "externalCommand2.cwd": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Initial directory"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
