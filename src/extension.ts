@@ -15,13 +15,11 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let commandNumber = 2;
-    
-    for (let i = 1; i <= commandNumber; i++) {
-        let cmdId = `externalCommand${i}`;
-        let disposable = vscode.commands.registerCommand(`extension.${cmdId}`, () => {
+    let commands = vscode.extensions.getExtension('lihui.vs-external-tools').packageJSON.contributes.commands;
+    for(let command of commands){
+        let disposable = vscode.commands.registerCommand(command.command, () => {
             // The code you place here will be executed every time your command is executed
-            executeCommand(vscode.workspace.getConfiguration(cmdId));
+            executeCommand(vscode.workspace.getConfiguration(command.command));
         });
 
         context.subscriptions.push(disposable);
@@ -32,6 +30,10 @@ function executeCommand(config:vscode.WorkspaceConfiguration) {
     let command = config.get<string>('command');
     let args = config.get<string[]>('args', []);
     let cwd = config.get<string>('cwd');
+    
+    if(!command){
+        return ;
+    }
 
     let macro = {
         ItemPath: getActiveFilePath(),
