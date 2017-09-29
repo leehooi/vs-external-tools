@@ -1,65 +1,66 @@
-# vs-external-tools README
+# External Tools for Visual Studio Code
 
-This is the README for your extension "vs-external-tools". After writing up a brief description, we recommend including the following sections.
+Inspired by [Visual Studio External Tools](https://docs.microsoft.com/en-us/sql/ssms/menu-help/external-tools).
+Use this extension to add external tools, such as Tortoise Git or Notepad.
+Adding external tools allows you to easily launch other applications.
+You can specify arguments and a working directory when launching the tool.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+This extension contributes 24 commands:
 
-For example if there is an image subfolder under your extension project workspace:
+* `vs-external-tools.externalCommand1`
+* `vs-external-tools.externalCommand2`
+* ...
+* `vs-external-tools.externalCommand24`
 
-\!\[feature X\]\(images/feature-x.png\)
+Two ways to launch external command 1(Other commands are the same):
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Execute command `External Command 1` in Command Palette(`Ctrl + Shift + P` or `Cmd + Shift + P`).
+2. [Binding a key](https://code.visualstudio.com/docs/customization/keybindings) for command `vs-external-tools.externalCommand1`.
 
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* vs-external-tools.externalCommand1:
+    * `vs-external-tools.externalCommand1.command`: Specify the path to the .exe, .com, .pif, .bat, .cmd, or other file that you intend to launch. 
+    * `vs-external-tools.externalCommand1.args`: Specify the variables that are passed to the tool when the tool is executed.
+    * `vs-external-tools.externalCommand1.cwd`: Specify the working directory of the tool.
+* vs-external-tools.externalCommand2: `command`, `args`, `cwd` are the same as command1.
+* ...
+* vs-external-tools.externalCommand24: `command`, `args`, `cwd` are the same as command1.
 
-## Known Issues
+This extension supplies values for when an external tool is launched. 
+These values can be used as macros in `args` and `cwd`.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Macro list for external tools:
+* `$(ItemPath)` The complete file name of the current source (defined as drive + path + file name).
+* `$(ItemDir)` The directory of the current source (defined as drive + path).
+* `$(ItemFileName)` The file name of the current source (defined as file name).
+* `$(ItemExt)` The file name extension of the current source.
+* `$(ProjectDir)` The directory of the current workspace (defined as drive + path).
+
+## Sample
+
+Show TortoiseGit log window for current file. 
+```javescript
+{
+    "vs-external-tools.externalCommand1.command": "TortoiseGitProc.exe",
+    "vs-external-tools.externalCommand1.args": ["/command:log", "/path:$(ItemPath)"],
+    "vs-external-tools.externalCommand1.cwd": "$(ItemDir)"
+}
+```
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
+Initial release of vs-external-tools
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
 
 -----------------------------------------------------------------------------------------------------------
 
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**

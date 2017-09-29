@@ -1,8 +1,8 @@
 {
     "name": "vs-external-tools",
-    "displayName": "vs-external-tools",
-    "description": "",
-    "version": "0.0.1",
+    "displayName": "External Tools",
+    "description": "Allows you to easily launch many other applications",
+    "version": "1.0.1",
     "publisher": "lihui",
     "engines": {
         "vscode": "^1.16.0"
@@ -492,5 +492,19 @@
         "mocha": "^3.5.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
-    }
+    },
+    "icon": "icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/leehooi/vs-external-tools.git"
+    },
+    "keywords": [
+        "external",
+        "tool",
+        "command",
+        "shell",
+        "bat",
+        "exe",
+        "cmd"
+    ]
 }
