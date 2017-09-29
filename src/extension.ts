@@ -48,9 +48,13 @@ function executeCommand(config:vscode.WorkspaceConfiguration) {
     });
 
     let replacedCwd = replaceWithMacro(cwd, macro) || macro.ProjectDir || macro.ItemDir;
-    process.spawn(command, replacedArgs, {
-        cwd: replacedCwd
-    });
+    try {
+        process.spawn(command, replacedArgs, {
+            cwd: replacedCwd
+        });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 function getActiveFilePath(): string {
