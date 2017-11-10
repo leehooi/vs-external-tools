@@ -3,7 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as process from 'child_process'
-import * as path from 'path'
+import * as macro from './macro'
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -34,63 +34,24 @@ function executeCommand(config:vscode.WorkspaceConfiguration) {
     if(!command){
         return ;
     }
+    
+    macro.create().then(
+        (obj) => {
+            let replacedArgs = args.map((arg) => {
+                return obj.replace(arg);
+            });
 
-    let macro = {
-        ItemPath: getActiveFilePath(),
-        ItemDir: getActiveFileDirectory(),
-        ItemFileName: getActiveFileName(),
-        ItemExt: getActiveFileExtension(),
-        ProjectDir: getWorkspaceRootPath()
-    };
-
-    let replacedArgs = args.map((arg) => {
-        return replaceWithMacro(arg, macro);
-    });
-
-    let replacedCwd = replaceWithMacro(cwd, macro) || macro.ProjectDir || macro.ItemDir;
-    try {
-        process.spawn(command, replacedArgs, {
-            cwd: replacedCwd
-        });
-    } catch (err) {
-        console.log(err);
-    }
+            let replacedCwd = obj.replace(cwd) || obj.ProjectDir || obj.ItemDir;
+            try {
+                process.spawn(command, replacedArgs, {
+                    cwd: replacedCwd
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    );
 }
-
-function getActiveFilePath(): string {
-    return vscode.window.activeTextEditor.document.fileName;
-}
-
-function getActiveFileDirectory(): string {
-    return path.dirname(vscode.window.activeTextEditor.document.fileName);
-}
-
-function getActiveFileName(): string {
-    return path.basename(vscode.window.activeTextEditor.document.fileName, getActiveFileExtension());
-}
-
-function getActiveFileExtension(): string {
-    return path.extname(vscode.window.activeTextEditor.document.fileName);
-}
-
-function getWorkspaceRootPath(): string {
-    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-        return vscode.workspace.workspaceFolders[0].uri.fsPath;
-    }
-    return undefined;
-}
-
-function replaceWithMacro(input: string, macro: any) {
-    if(!input){
-        return undefined;
-    }
-    let replaced = input;
-    for (let key in macro) {
-        replaced = replaced.replace(`$(${key})`, macro[key]);
-    }
-    return replaced;
-}
-
 // this method is called when your extension is deactivated
 export function deactivate() {
 }

@@ -41,6 +41,7 @@ Macro list for external tools:
 * `$(ItemFileName)` The file name of the current source (defined as file name).
 * `$(ItemExt)` The file name extension of the current source.
 * `$(ProjectDir)` The directory of the current workspace (defined as drive + path).
+* `$(Clipboard)` The content from clipboard.
 
 ## Sample
 
@@ -54,6 +55,10 @@ Show TortoiseGit log window for current file.
 ```
 
 ## Release Notes
+
+### 1.1.0
+
+Support Macro `$(Clipboard)`
 
 ### 1.0.0
 
