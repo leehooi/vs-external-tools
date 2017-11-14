@@ -2,7 +2,7 @@
   "name": "vs-external-tools",
   "displayName": "External Tools",
   "description": "Allows you to easily launch many other applications",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "lihui",
   "engines": {
     "vscode": "^1.16.0"
@@ -491,8 +491,7 @@
     "vscode": "^1.1.5",
     "mocha": "^3.5.0",
     "@types/node": "^7.0.43",
-    "@types/mocha": "^2.2.42",
-    "clipboardy": "^1.2.1"
+    "@types/mocha": "^2.2.42"
   },
   "icon": "icon.png",
   "repository": {
@@ -509,5 +508,6 @@
     "cmd"
   ],
   "dependencies": {
+    "clipboardy": "^1.2.1"
   }
 }
