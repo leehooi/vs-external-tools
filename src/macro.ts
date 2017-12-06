@@ -62,5 +62,9 @@ function getWorkspaceRootPath(): Promise<string> {
 }
 
 function getClipboard(): Promise<string>{
-    return clipboardy.read();
+    return clipboardy.read().then(value => {
+        return value;
+    }, error => {
+        return '';
+    });
 }
