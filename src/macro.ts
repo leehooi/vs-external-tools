@@ -9,6 +9,9 @@ class Macro {
     ItemExt: string;
     ProjectDir: string;
     Clipboard: string;
+    CurLine: string;
+    CurCol: string;
+    CurText: string;
 
     replace(input: string) {
         if (!input) {
@@ -16,7 +19,7 @@ class Macro {
         }
         let replaced = input;
         for (let key in this) {
-            replaced = replaced.replace(`$(${key})`, this[key]);
+            replaced = replaced.replace(`$(${key})`, this[key] as any);
         }
         return replaced;
     }
@@ -31,6 +34,11 @@ export function create(): Promise<Macro> {
         getActiveFileExtension().then(value => { macro.ItemExt = value; }),
         getWorkspaceRootPath().then(value => { macro.ProjectDir = value; }),
         getClipboard().then(value => { macro.Clipboard = value; }),
+        getCursorPosition().then(value => {
+            macro.CurLine = (value.line + 1).toString();
+            macro.CurCol = (value.character + 1).toString()
+        }),
+        getSelection().then(value => { macro.CurText = value; }),
     ]).then(() => {
         return macro;
     });
@@ -67,4 +75,13 @@ function getClipboard(): Promise<string>{
     }, error => {
         return '';
     });
+}
+
+function getCursorPosition(): Promise<vscode.Position>{
+    return Promise.resolve(vscode.window.activeTextEditor.selection.active);
+}
+
+function getSelection(): Promise<string> {
+    let selection = vscode.window.activeTextEditor.selection;
+    return Promise.resolve(vscode.window.activeTextEditor.document.getText(selection));
 }

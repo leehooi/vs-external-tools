@@ -42,6 +42,9 @@ Macro list for external tools:
 * `$(ItemExt)` The file name extension of the current source.
 * `$(ProjectDir)` The directory of the current workspace (defined as drive + path).
 * `$(Clipboard)` The content from clipboard.
+* `$(CurLine)` The current line position of the cursor in the editor.
+* `$(CurCol)` The current column position of the cursor in the editor.
+* `$(CurText)` The current selection text.
 
 ## Sample
 
@@ -55,6 +58,10 @@ Show TortoiseGit log window for current file.
 ```
 
 ## Release Notes
+
+### 1.3.0
+
+Support Macro `$(CurLine)`, `$(CurCol)`, `$(CurText)`
 
 ### 1.1.0
 
